@@ -4,7 +4,9 @@ from flask import (
     abort, 
     jsonify, 
     redirect,
-    request 
+    request,
+    render_template,
+    send_from_directory
 )
 from flask_login import (
     LoginManager, 
@@ -24,7 +26,7 @@ from schemas import (
 )
 import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='')
 #app.config.from_object('miniebay.default_settings')
 #app.config.from_envvar('ENVFILE')
 # login manager
@@ -40,9 +42,8 @@ engine = create_engine('mysql://root:test@127.0.0.1/miniebay')
 Session = sessionmaker(bind=engine)
 
 @app.route("/")
-@login_required
 def index():
-    return "hello world"
+    return redirect('/index.html')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
