@@ -22,6 +22,7 @@ from schemas import (
     product_schema,
     products_schema
 )
+import datetime
 
 app = Flask(__name__)
 #app.config.from_object('miniebay.default_settings')
@@ -34,8 +35,6 @@ app.config.update(
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-
-ma = Marshmallow(app)
 
 engine = create_engine('mysql://root:test@127.0.0.1/miniebay')
 Session = sessionmaker(bind=engine)
@@ -91,6 +90,8 @@ def list_users():
         users = session.query(User).limit(100).all()
         result = users_schema.dump(users)
         return jsonify(result.data)
+    else:
+        abort(405)
 
 @app.route("/api/users/<id>", methods=['GET', 'PUT', 'DELETE'])
 @login_required
@@ -100,10 +101,13 @@ def user_detail(id):
         if user is None:
             abort(404)
         else:
-            return user_schema.jsonify(user) 
-
+            result = user_schema.dump(user) 
+            return jsonify(result.data)
+    else:
+        abort(405)
 
 @app.route("/api/products", methods=['GET', 'POST'])
+@login_required
 def list_products():
     if request.method == 'GET':
         session = Session()
@@ -111,20 +115,60 @@ def list_products():
         result = products_schema.dump(products)
         return jsonify(result.data)
     elif request.method == 'POST':
-        product_json = request.data
+        product_json = request.get_json()
+        if not product_json:
+            return jsonify({'message': 'No input data provided'}), 400
+        data, errors = product_schema.load(product_json)
+        if errors:
+            return jsonify(errors), 400 
+        user = find_user_by_id(data['user_id'])
+        if not user:
+            return jsonify({'message': 'user does not exist'}), 400
+        product = Product(**data)
         session = Session()
+        session.add(product)
         session.commit()
+        result = product_schema.dump(session.query(Product).get(product.id))
+        return jsonify(result.data)
+    else:
+        abort(405)
 
-@app.route("/api/products/<id>", methods=['GET', 'PUT'])
-@login_required
+@app.route("/api/products/<id>", methods=['GET', 'PUT', 'DELETE'])
 def product_detail(id):
     if request.method == 'GET':
-        session = Session()
-        product = session.query(User).filter(Product.id==id).one_or_none()
-        if product is None:
-            abort(404)
+        product = get_product_by_id(id)
+        if product:
+            result = product_schema.dump(product) 
+            return jsonify(result.data)
         else:
-            return product_schema.jsonify(product) 
+            abort(404)
+    elif request.method == 'PUT':
+        product = get_product_by_id(id)
+        if not product:
+            return jsonify({'message': 'Product not exists'}), 404
+        product_json = request.get_json()
+        if not product_json:
+            return jsonify({'message': 'No input data provided'}), 400
+        data, errors = product_schema.load(product_json)
+        if errors:
+            return jsonify(errors), 400 
+        if data['user_id'] != getattr(product, 'user_id'):
+            return jsonify({'message': 'Only user created the product can update'}), 400
+        session = Session()
+        session.query(Product).filter(Product.id==id).update(data)
+        session.commit()
+        product = get_product_by_id(id)
+        result = product_schema.dump(product)
+        return jsonify(result.data)
+    else:
+        abort(405)
+
+def get_product_by_id(id):
+    session = Session()
+    try:
+        return session.query(Product).get(id)
+    except Exception:
+        return None
 
 @app.route("/api/users/<user_id>/products", methods=['GET'])
 @login_required
