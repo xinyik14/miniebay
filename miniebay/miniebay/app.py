@@ -12,10 +12,16 @@ from flask_login import (
     login_user,
     logout_user
 )
+from flask_marshmallow import Marshmallow
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from models import User, Product
-import json
+from schemas import (
+    user_schema,
+    users_schema,
+    product_schema,
+    products_schema
+)
 
 app = Flask(__name__)
 #app.config.from_object('miniebay.default_settings')
@@ -28,6 +34,8 @@ app.config.update(
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+ma = Marshmallow(app)
 
 engine = create_engine('mysql://root:test@127.0.0.1/miniebay')
 Session = sessionmaker(bind=engine)
@@ -65,57 +73,71 @@ def logout():
     logout_user()
     return Response('<p>Logged out</p>')
 
+def find_user_by_id(id):
+    session = Session()
+    try:
+        return session.query(User).get(id)
+    except Exception:
+        return None
+
 def find_user_by_name(username):
     session = Session()
     return session.query(User).filter(User.username==username).one_or_none()
 
-@app.route("/users", methods=['GET', 'POST'])
+@app.route("/api/users", methods=['GET', 'POST'])
 def list_users():
     if request.method == 'GET':
         session = Session()
-        return jsonify([u.to_json() for u in
-                        session.query(User).limit(100).all()])
+        users = session.query(User).limit(100).all()
+        result = users_schema.dump(users)
+        return jsonify(result.data)
 
-@app.route("/users/<username>", methods=['GET', 'PUT', 'DELETE'])
-def user_by_name(username):
+@app.route("/api/users/<id>", methods=['GET', 'PUT', 'DELETE'])
+@login_required
+def user_detail(id):
     if request.method == 'GET':
-        user = find_user_by_name(username)
+        user = find_user_by_id(id)
         if user is None:
             abort(404)
         else:
-            return jsonify(user.to_json())
+            return user_schema.jsonify(user) 
 
 
-@app.route("/products", methods=['GET', 'POST'])
+@app.route("/api/products", methods=['GET', 'POST'])
 def list_products():
     if request.method == 'GET':
         session = Session()
-        return jsonify([p.to_json() for p in
-                            session.query(Product).limit(100).all()])
+        products = session.query(Product).limit(100).all()
+        result = products_schema.dump(products)
+        return jsonify(result.data)
     elif request.method == 'POST':
+        product_json = request.data
         session = Session()
         session.commit()
 
-@app.route("/products/<product_id>", methods=['GET', 'PUT'])
-def product_by_id(product_id):
+@app.route("/api/products/<id>", methods=['GET', 'PUT'])
+@login_required
+def product_detail(id):
     if request.method == 'GET':
         session = Session()
         product = session.query(User).filter(Product.id==id).one_or_none()
-        if user is None:
+        if product is None:
             abort(404)
         else:
-            return jsonify(user.to_json())
+            return product_schema.jsonify(product) 
 
-@app.route("/users/<user_id>/products", methods=['GET'])
+@app.route("/api/users/<user_id>/products", methods=['GET'])
+@login_required
 def list_user_products(user_id):
     session = Session()
-    return jsonify([p.to_json() for p in
-                    session.query(Product).filter(Product.user_id==user_id).limit(100).all()])
+    products = session.query(Product).filter(Product.user_id==user_id).limit(100).all()
+    result = products_schema.dump(products)
+    return jsonify(result.data)
 
 @login_manager.user_loader
-def load_user(userid):
+def load_user(id):
     session = Session()
-    return session.query(User).get(userid)
+    return session.query(User).get(id)
 
 # handle login failed
 @app.errorhandler(401)
