@@ -1,12 +1,13 @@
 from sqlalchemy import Column, DateTime, Integer, Float, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from flask_jsontools import JsonSerializableBase
+from flask.ext.login import UserMixin
 from sqlalchemy import inspect
 import datetime
 
 Base = declarative_base(cls=(JsonSerializableBase,))
 
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(64), unique=True)
