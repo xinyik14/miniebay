@@ -134,6 +134,7 @@ def list_products():
         abort(405)
 
 @app.route("/api/products/<id>", methods=['GET', 'PUT', 'DELETE'])
+@login_required
 def product_detail(id):
     if request.method == 'GET':
         product = get_product_by_id(id)
