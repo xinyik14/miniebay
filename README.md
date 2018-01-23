@@ -11,7 +11,6 @@ brew install mysql-connector-c
 brew unlink mysql-connector-c
 brew install mysql
 xcode-select --install (if error about clang encountered, try run)
-pip install mysql-python
 ```
 
 ## steps to bootstap
@@ -20,4 +19,8 @@ virtualenv dev
 . dev/bin/activate
 pip install -r requirements.txt
 alembic upgrade head
+
+docker exec -it miniebay-mysql mysql -uroot -ptest -e "use miniebay; insert into users (username, password) values ('test@gmail.com', 'test')";
+cd miniebay/miniebay/miniebay/
+FLASK_APP=app.py flask run
 ```
