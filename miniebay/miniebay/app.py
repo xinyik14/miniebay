@@ -24,7 +24,7 @@ from schemas import (
     product_schema,
     products_schema
 )
-import datetime
+from datetime import datetime
 
 app = Flask(__name__, static_folder='static', static_url_path='')
 #app.config.from_object('miniebay.default_settings')
@@ -189,3 +189,11 @@ def load_user(id):
 @app.errorhandler(401)
 def page_not_found(e):
     return Response('<p>Login failed</p>')
+
+@app.after_request
+def add_header(resp):
+    resp.headers['Last-Modified'] = datetime.now()
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '-1'
+    return resp
