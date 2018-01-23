@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductRow from './product.js';
+import ProductRow from './product_row.js';
 import ProductStore from '../stores/product_store.js'
 import API from '../utils/api';
 
@@ -20,7 +20,8 @@ class ProductTable extends React.Component {
   componentDidMount() {
     ProductStore.addChangeListener(() => this._onChange());
   }
-componentWillUnmount() {
+
+  componentWillUnmount() {
     ProductStore.removeChangeListener(() => this._onChange());
   }
 

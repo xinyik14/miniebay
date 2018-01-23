@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProductTable from './components/product_table.js';
+import ProductNew from './components/product_new.js';
+import SearchBar from './components/search_bar.js';
 
 class Main extends React.Component {
   render() {
     return ( 
-      <ProductTable />
+      <div>
+        <SearchBar />
+        <ProductTable />
+        <ProductNew />
+      </div>
     );
   }
 }
