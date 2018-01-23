@@ -1,20 +1,18 @@
+import React from 'react';
 class ProductRow extends React.Component {
-
   constructor(props) {
     super(props);
-    this.state = {
-      name: props.name,
-      description: props.description,
-      price: props.price
-    };
   }
 
   render() {
+    const name = this.props.name;
+    const price = this.props.price;
+    const description = this.props.description;
     return (
       <tr>
-        <td>{this.state.name}</td>
-        <td>{this.state.price}</td>
-        <td>{this.state.description}</td>
+        <td>{name}</td>
+        <td>{price}</td>
+        <td>{description}</td>
       </tr>
     );
   }

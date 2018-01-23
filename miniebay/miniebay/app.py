@@ -95,7 +95,6 @@ def list_users():
         abort(405)
 
 @app.route("/api/users/<id>", methods=['GET', 'PUT', 'DELETE'])
-@login_required
 def user_detail(id):
     if request.method == 'GET':
         user = find_user_by_id(id)
@@ -108,7 +107,6 @@ def user_detail(id):
         abort(405)
 
 @app.route("/api/products", methods=['GET', 'POST'])
-@login_required
 def list_products():
     if request.method == 'GET':
         session = Session()
@@ -135,7 +133,6 @@ def list_products():
         abort(405)
 
 @app.route("/api/products/<id>", methods=['GET', 'PUT', 'DELETE'])
-@login_required
 def product_detail(id):
     if request.method == 'GET':
         product = get_product_by_id(id)
@@ -173,7 +170,6 @@ def get_product_by_id(id):
         return None
 
 @app.route("/api/users/<user_id>/products", methods=['GET'])
-@login_required
 def list_user_products(user_id):
     session = Session()
     products = session.query(Product).filter(Product.user_id==user_id).limit(100).all()
