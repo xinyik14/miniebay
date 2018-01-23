@@ -7,5 +7,12 @@ export default {
       type: Constants.LOAD_PRODUCTS,
       data: products
     })
+  },
+
+  filterProducts: (filter) => {
+    AppDispatcher.handleAction({
+      type: Constants.FILTER_PRODUCTS,
+      data: filter
+    })
   }
 }

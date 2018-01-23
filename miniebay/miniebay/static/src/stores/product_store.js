@@ -3,6 +3,7 @@ import Constants from '../constants/constants';
 import {EventEmitter} from 'events';
 
 var products = [];
+var productFilter = '';
 
 function loadProducts(data) {
   products = data;
@@ -10,6 +11,12 @@ function loadProducts(data) {
 
 class ProductStore extends EventEmitter {
   getState() {
+    if (productFilter !== '') {
+      return products.filter(product => {
+        return product.name.includes(productFilter) || 
+          (product.description && product.description.includes(productFilter));
+      });
+    }
     return products;
   }
 
@@ -36,6 +43,9 @@ AppDispatcher.register((payload) => {
       loadProducts(action.data);
       _ProductStore.emitChange();
       break;
+    case Constants.FILTER_PRODUCTS:
+      productFilter = action.data; 
+      _ProductStore.emitChange();
     default:
       break;
   }

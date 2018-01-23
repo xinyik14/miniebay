@@ -19,5 +19,5 @@ export default {
       contentType: "application/json; charset=utf-8",
       success: cb 
     })
-  }
+  },
 }
