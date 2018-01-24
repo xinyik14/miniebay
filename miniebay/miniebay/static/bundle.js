@@ -22365,7 +22365,7 @@ var ProductTable = function (_React$Component) {
 
       return _react2.default.createElement(
         'table',
-        null,
+        { className: 'table' },
         _react2.default.createElement(
           'thead',
           null,
@@ -33709,12 +33709,18 @@ var SearchBar = function (_React$Component) {
     value: function render() {
       var handleChange = this._handleChange.bind(this);
       return _react2.default.createElement(
-        'form',
-        null,
-        _react2.default.createElement('input', {
-          type: 'text',
-          onChange: handleChange,
-          placeholder: 'Search...' })
+        'div',
+        { className: 'row' },
+        _react2.default.createElement('div', { className: 'col-md-8' }),
+        _react2.default.createElement(
+          'div',
+          { 'class': 'col-md-4' },
+          _react2.default.createElement('span', { 'class': 'glyphicon glyphicon-search' }),
+          _react2.default.createElement('input', {
+            type: 'text',
+            onChange: handleChange,
+            placeholder: 'Search...' })
+        )
       );
     }
   }]);

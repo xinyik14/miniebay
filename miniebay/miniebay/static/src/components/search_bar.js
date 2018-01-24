@@ -10,12 +10,15 @@ class SearchBar extends React.Component {
   render() {
     const handleChange = this._handleChange.bind(this);
     return (
-      <form>
+      <div className="row">
+        <div className="col-md-8"></div>
+        <div class="col-md-4">
         <input 
-          type='text' 
+          type='text'
           onChange={handleChange}
           placeholder='Search...' />
-      </form>
+        </div>
+      </div>
     )
   }
 }
