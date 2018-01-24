@@ -10,13 +10,14 @@ class SearchBar extends React.Component {
   render() {
     const handleChange = this._handleChange.bind(this);
     return (
-      <div className="row">
+      <div className="row" style={{position: "relative", top:"40px", bottom:"50px"}}>
         <div className="col-md-8"></div>
         <div class="col-md-4">
         <input 
           type='text'
           onChange={handleChange}
-          placeholder='Search...' />
+          placeholder='Search...' 
+          aria-describedby="sizing-addon1" />
         </div>
       </div>
     )

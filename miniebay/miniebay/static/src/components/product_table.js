@@ -43,16 +43,19 @@ class ProductTable extends React.Component {
     });
 
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </table>
+      <div className="panel panel-default" style={{position:"relative", top:"60px"}}>
+        <div className="panel-heading" style={{color:"#1a53ff", fontSize: "20px"}}>Listing of products</div>
+        <table className="table" style={{border: "groove", backgroundColor:"#f5f5f5"}}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </table>
+      </div>
     );
   }
 }

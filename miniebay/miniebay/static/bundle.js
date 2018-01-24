@@ -9792,6 +9792,20 @@ var Main = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
+        _react2.default.createElement(
+          'div',
+          { 'class': 'page-header' },
+          _react2.default.createElement(
+            'h1',
+            { style: { color: "#002080", textAlign: "center", position: "relative", top: "20px", bottom: "30px" } },
+            'Mini Ebay ',
+            _react2.default.createElement(
+              'small',
+              null,
+              'product listing web'
+            )
+          )
+        ),
         _react2.default.createElement(_search_bar2.default, null),
         _react2.default.createElement(_product_table2.default, null),
         _react2.default.createElement(_product_new2.default, null)
@@ -22364,35 +22378,44 @@ var ProductTable = function (_React$Component) {
       });
 
       return _react2.default.createElement(
-        'table',
-        { className: 'table' },
+        'div',
+        { className: 'panel panel-default', style: { position: "relative", top: "60px" } },
         _react2.default.createElement(
-          'thead',
-          null,
-          _react2.default.createElement(
-            'tr',
-            null,
-            _react2.default.createElement(
-              'th',
-              null,
-              'Name'
-            ),
-            _react2.default.createElement(
-              'th',
-              null,
-              'Price'
-            ),
-            _react2.default.createElement(
-              'th',
-              null,
-              'Description'
-            )
-          )
+          'div',
+          { className: 'panel-heading', style: { color: "#1a53ff", fontSize: "20px" } },
+          'Listing of products'
         ),
         _react2.default.createElement(
-          'tbody',
-          null,
-          rows
+          'table',
+          { className: 'table', style: { border: "groove", backgroundColor: "#f5f5f5" } },
+          _react2.default.createElement(
+            'thead',
+            null,
+            _react2.default.createElement(
+              'tr',
+              null,
+              _react2.default.createElement(
+                'th',
+                null,
+                'Name'
+              ),
+              _react2.default.createElement(
+                'th',
+                null,
+                'Price'
+              ),
+              _react2.default.createElement(
+                'th',
+                null,
+                'Description'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'tbody',
+            null,
+            rows
+          )
         )
       );
     }
@@ -33598,7 +33621,7 @@ var ProductNew = function (_React$Component) {
       var handleDescriptionChange = this._handleDescriptionChange.bind(this);
       return _react2.default.createElement(
         'div',
-        null,
+        { style: { position: "relative", left: "30px", top: "80px" } },
         _react2.default.createElement(
           'h3',
           null,
@@ -33710,16 +33733,16 @@ var SearchBar = function (_React$Component) {
       var handleChange = this._handleChange.bind(this);
       return _react2.default.createElement(
         'div',
-        { className: 'row' },
+        { className: 'row', style: { position: "relative", top: "40px", bottom: "50px" } },
         _react2.default.createElement('div', { className: 'col-md-8' }),
         _react2.default.createElement(
           'div',
           { 'class': 'col-md-4' },
-          _react2.default.createElement('span', { 'class': 'glyphicon glyphicon-search' }),
           _react2.default.createElement('input', {
             type: 'text',
             onChange: handleChange,
-            placeholder: 'Search...' })
+            placeholder: 'Search...',
+            'aria-describedby': 'sizing-addon1' })
         )
       );
     }

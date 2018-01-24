@@ -49,7 +49,7 @@ class ProductNew extends React.Component {
     const handlePriceChange = this._handlePriceChange.bind(this);
     const handleDescriptionChange = this._handleDescriptionChange.bind(this);
     return (
-      <div>
+      <div style={{position: "relative", left:"30px", top:"80px"}}>
         <h3>Create New Product</h3>
         <form onSubmit={this._handleSubmit.bind(this)}>
           <span>
